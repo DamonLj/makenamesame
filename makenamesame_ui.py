@@ -63,48 +63,12 @@ class MnsUI(tk.Frame):
         dir = self.dirpath.get()
         result = Makenamesame().make_onedir_same(self.dirpath.get())
         if result:
-            # self.pop_ok("重命名成功!", "green")  #使用自建弹窗
             mb.showinfo(title="Info", message="重命名成功！")
         else:
-            # self.pop_ok("文件夹路径错误!", "red")  #使用自建弹窗
             mb.showerror(title="Info", message="文件夹路径错误！")
 
     def cancel(self):
         self.master.destroy()
-
-    # # 使用自建弹窗
-    # def pop_ok(self, info="OK", fg="black"):
-    #     root_ = tk.Toplevel()
-    #     ok_window = OkDialog(master=root_, info=info, fg=fg)
-    #     # ok_window = OkDialog(master=self.master, info=info, fg=fg) #将ok框架放到通一个主窗口上
-    #     self.wait_window(ok_window)
-
-
-# #发现messagebox，就不用自己新建类了，自己建的类无法禁用底层窗口
-# class OkDialog(tk.Frame):
-#     def __init__(self, master=None, info="OK", **kw):
-#         super().__init__(master)
-#         self.master = master
-#         self.pack()
-#         self.info = info
-#         self.kw = kw
-#         self.master.title("")
-#         self.create_widgets()
-#         self.master.update()
-#         self.x_ = self.master.winfo_screenwidth() / 2 - self.master.winfo_width() / 2
-#         self.y_ = self.master.winfo_screenheight() / 2 - self.master.winfo_height() / 2
-#         self.master.geometry("+%d+%d" % (self.x_, self.y_))
-#
-#
-#     def create_widgets(self):
-#         l_ok = tk.Label(self, text=self.info, **self.kw)
-#         l_ok.pack(padx=60, pady=20)
-#
-#         b_ok = tk.Button(self, text="确定", command=self.cancel, font=("微软雅黑", 12))
-#         b_ok.pack(padx=60,pady=10)
-#
-#     def cancel(self):
-#         self.master.destroy()
 
 
 class Makenamesame():
