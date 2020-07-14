@@ -8,7 +8,6 @@ import os
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
-from tkinter import simpledialog as sd
 
 
 class MnsUI(tk.Frame):
@@ -61,7 +60,7 @@ class MnsUI(tk.Frame):
 
     def make_allname_same(self):
         dir = self.dirpath.get()
-        result = Makenamesame().make_onedir_same(self.dirpath.get())
+        result = Makenamesame().make_alldir_same(self.dirpath.get())
         if result:
             mb.showinfo(title="Info", message="重命名成功！")
         else:
@@ -72,7 +71,7 @@ class MnsUI(tk.Frame):
 
 
 class Makenamesame():
-    def make_onedir_same(self, dir):
+    def make_alldir_same(self, dir):
         if os.path.exists(dir):
             sametuzhilist = self.find_same_tuzhi(dir)
             for t in sametuzhilist:
@@ -98,19 +97,21 @@ class Makenamesame():
         找到相同图纸，返回文件夹内所有相同图纸的列表
         '''
         sametuzhilist = []
-        pdflist = []
-        dwflist = []
-        for file in os.listdir(dir):
-            if os.path.splitext(file)[1] == ".pdf":
-                pdflist.append(file)
-            elif os.path.splitext(file)[1] == ".dwf":
-                dwflist.append(file)
-            else:
-                pass
-        for pdf in pdflist:
-            for dwf in dwflist:
-                if dwf.split("_")[0] == pdf.split("_")[0]:
-                    sametuzhilist.append([os.path.join(dir, dwf), os.path.join(dir, pdf)])
+        for root, dirs, filenames in os.walk(dir):
+            pdflist = []
+            dwflist = []
+            for file in filenames:
+                if os.path.splitext(file)[1] == ".pdf":
+                    pdflist.append(file)
+                elif os.path.splitext(file)[1] == ".dwf":
+                    dwflist.append(file)
+                else:
+                    pass
+            for pdf in pdflist:
+                for dwf in dwflist:
+                    if dwf.split("_")[0] == pdf.split("_")[0]:
+                        sametuzhilist.append([os.path.join(root, dwf), os.path.join(root, pdf)])
+                    else: pass
         return sametuzhilist
 
 
