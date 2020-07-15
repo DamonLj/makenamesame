@@ -27,22 +27,25 @@ class PdfFile():
         else: pass
         return v
 
+
 class LastestPdf():
     def __init__(self, dir):
         self.d = dir
         self.list = []
 
     def lastest_pdf(self):
-        for f in os.listdir(self.d):
-            f_c = PdfFile(f)
-            self.list.append((f, f_c.n, int(f_c.v)))
-        df = pd.DataFrame(self.list, columns=["filename", "number", "virsion"])
-        lastest_id = list(df.groupby("number")["virsion"].idxmax())
-        old_id = list(set(df.index) - set(lastest_id))
-        for i in old_id:
-            # print(df.at[i, "filename"])
-            os.remove(os.path.join(dir, df.at[i, "filename"]))
-        for i in lastest_id:
-            os.rename(os.path.join(dir, df.at[i, "filename"]),
-                      os.path.join(dir, df.at[i, "number"] + "_" + ".pdf"))
-        return
+        if os.path.exists(self.d):
+            for f in os.listdir(self.d):
+                f_c = PdfFile(f)
+                self.list.append((f, f_c.n, int(f_c.v)))
+            df = pd.DataFrame(self.list, columns=["filename", "number", "virsion"])
+            lastest_id = list(df.groupby("number")["virsion"].idxmax())
+            old_id = list(set(df.index) - set(lastest_id))
+            for i in old_id:
+                # print(df.at[i, "filename"])
+                os.remove(os.path.join(self.d, df.at[i, "filename"]))
+            for i in lastest_id:
+                os.rename(os.path.join(self.d, df.at[i, "filename"]),
+                          os.path.join(self.d, df.at[i, "number"] + "_" + ".pdf"))
+            return 1
+        else: return 0

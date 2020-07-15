@@ -3,11 +3,12 @@
 
 __author__ = 'Damon'
 
-
-import os
 import tkinter as tk
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
+
+from makenamesame import Makenamesame
+from lastestpdf import LastestPdf
 
 
 class MnsUI(tk.Frame):
@@ -37,6 +38,9 @@ class MnsUI(tk.Frame):
         b_makenamesame = tk.Button(self, text="重命名文件", command=self.make_allname_same, font=("微软雅黑", 12))
         b_makenamesame.grid(row=2, column=1, pady=20)
 
+        b_lastestpdf = tk.Button(self, text="删除旧PDF", command=self.lastest_pdf, font=("微软雅黑", 9))
+        b_lastestpdf.grid(row=2, column=0, pady=20)
+
         l_explanation = tk.Label(self)
         l_explanation["text"] ='''
 *********************************************说  明************************************************************
@@ -60,60 +64,23 @@ class MnsUI(tk.Frame):
         self.dirpath.set(self.path_)
 
     def make_allname_same(self):
-        dir = self.dirpath.get()
-        result = Makenamesame().make_alldir_same(self.dirpath.get())
+        d = self.dirpath.get()
+        result = Makenamesame(d).make_alldir_same()
         if result:
             mb.showinfo(title="Info", message="重命名成功！")  #使用message类弹出新窗口
         else:
             mb.showerror(title="Info", message="文件夹路径错误！")
 
+    def lastest_pdf(self):
+        d = self.dirpath.get()
+        result = LastestPdf(d).lastest_pdf()
+        if result:
+            mb.showinfo(title="Info", message="删除旧PDF成功！")  #使用message类弹出新窗口
+        else:
+            mb.showerror(title="Info", message="文件夹路径错误！")
+
     def cancel(self):
         self.master.destroy()  #关闭窗口，不是框架，所以是master
-
-
-class Makenamesame():
-    def make_alldir_same(self, dir):
-        if os.path.exists(dir):
-            sametuzhilist = self.find_same_tuzhi(dir)
-            for t in sametuzhilist:
-                self.make_name_same(*t)
-            return 1
-        else:
-            return 0
-
-    def make_name_same(self, filepath0, filepath1):
-        '''
-        将file1重命名为和file0相同名字
-        需要不同文件后缀
-        '''
-        if os.path.splitext(filepath0)[1] == os.path.splitext(filepath1)[1]:
-            print("文件扩展名相同，不能重命名!")
-        else:
-            filepath2 = os.path.splitext(filepath0)[0] + os.path.splitext(filepath1)[1]
-            os.rename(filepath1, filepath2)
-        return filepath2
-
-    def find_same_tuzhi(self, dir):
-        '''
-        找到相同图纸，返回文件夹内所有相同图纸的列表
-        '''
-        sametuzhilist = []
-        for root, dirs, filenames in os.walk(dir):
-            pdflist = []
-            dwflist = []
-            for file in filenames:
-                if os.path.splitext(file)[1] == ".pdf":
-                    pdflist.append(file)
-                elif os.path.splitext(file)[1] == ".dwf":
-                    dwflist.append(file)
-                else:
-                    pass
-            for pdf in pdflist:
-                for dwf in dwflist:
-                    if dwf.split("_")[0] == pdf.split("_")[0]:
-                        sametuzhilist.append([os.path.join(root, dwf), os.path.join(root, pdf)])
-                    else: pass
-        return sametuzhilist
 
 
 root = tk.Tk()
