@@ -4,6 +4,7 @@
 __author__ = 'Damon'
 
 import os
+import numpy as np
 import pandas as pd
 
 
@@ -15,7 +16,7 @@ class PdfFile():
         self.v = self.get_vision()
 
     def get_num(self):
-        n = self.fn.split("_")[0]
+        n = self.fn.split("_")[0].replace(" ", "")
         return n
 
     def get_vision(self):
@@ -36,10 +37,12 @@ class LastestPdf():
             f_c = PdfFile(f)
             self.list.append((f, f_c.n, int(f_c.v)))
         df = pd.DataFrame(self.list, columns=["filename", "number", "virsion"])
-        # g1 = df.groupby("number").apply(lambda t:t[t.virsion==t.virsion.max()])
-        idx = df.groupby("number")["virsion"].idxmax()
-        print(idx)
+        lastest_id = list(df.groupby("number")["virsion"].idxmax())
+        old_id = list(set(df.index) - set(lastest_id))
+        for i in old_id:
+            # print(df.at[i, "filename"])
+            os.remove(os.path.join(dir, df.at[i, "filename"]))
+        for i in lastest_id:
+            os.rename(os.path.join(dir, df.at[i, "filename"]),
+                      os.path.join(dir, df.at[i, "number"] + "_" + ".pdf"))
         return
-
-dir = "D:\Downloads\pdf"
-LastestPdf(dir).lastest_pdf()
