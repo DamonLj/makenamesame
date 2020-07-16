@@ -68,6 +68,7 @@ class MnsUI(tk.Frame):
         result = Makenamesame(d).make_alldir_same()
         if result:
             mb.showinfo(title="Info", message="重命名成功！")  #使用message类弹出新窗口
+            self.dirpath.set("")
         else:
             mb.showerror(title="Info", message="文件夹路径错误！")
 
@@ -76,6 +77,7 @@ class MnsUI(tk.Frame):
         result = LastestPdf(d).lastest_pdf()
         if result:
             mb.showinfo(title="Info", message="删除旧PDF成功！")  #使用message类弹出新窗口
+            self.dirpath.set("")
         else:
             mb.showerror(title="Info", message="文件夹路径错误！")
 
