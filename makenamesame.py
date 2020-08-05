@@ -26,7 +26,7 @@ class Makenamesame():
         需要不同文件后缀
         '''
         if os.path.splitext(filepath0)[1] == os.path.splitext(filepath1)[1]:
-            print("文件扩展名相同，不能重命名!")
+            pass
         else:
             filepath2 = os.path.splitext(filepath0)[0] + os.path.splitext(filepath1)[1]
             os.rename(filepath1, filepath2)
