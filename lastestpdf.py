@@ -20,7 +20,7 @@ class PdfFile():
         return n
 
     def get_vision(self):
-        if self.fn[-1] == "D":
+        if self.fn[-1] == "D" or self.fn[-1] == "E":
             v = 0
         elif self.fn[-1] == ")":
             v = self.fn[-2]
